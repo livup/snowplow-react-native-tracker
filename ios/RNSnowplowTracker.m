@@ -54,7 +54,7 @@ RCT_EXPORT_METHOD(trackSelfDescribingEvent
     [self.tracker trackUnstructuredEvent:unstructEvent];
 }
 
-RCT_EXPORT_METHOD(setUserId
+RCT_EXPORT_METHOD(setSubjectUserId
                   :(nonnull NSString *)userId
                   :(RCTResponseSenderBlock)callback) {
     [[self.tracker subject] setUserId:userId];
