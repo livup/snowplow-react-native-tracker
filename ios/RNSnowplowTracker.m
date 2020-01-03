@@ -21,6 +21,7 @@ RCT_EXPORT_METHOD(initialize
                   :(nonnull NSString *)namespace
                   :(nonnull NSString *)appId
                   :(NSDictionary *)options
+                  :(RCTResponseSenderBlock)callback
                   //:(BOOL *)autoScreenView
                 ) {
     SPSubject *subject = [[SPSubject alloc] initWithPlatformContext:YES andGeoContext:NO];
@@ -37,6 +38,8 @@ RCT_EXPORT_METHOD(initialize
         [builder setAutotrackScreenViews:options[@"autoScreenView"]];
         [builder setSubject:subject];
     }];
+
+    callback(@[[NSNull null], @true]);
 }
 
 RCT_EXPORT_METHOD(trackSelfDescribingEvent
@@ -51,13 +54,22 @@ RCT_EXPORT_METHOD(trackSelfDescribingEvent
     [self.tracker trackUnstructuredEvent:unstructEvent];
 }
 
+RCT_EXPORT_METHOD(setSubjectUserId
+                  :(nonnull NSString *)userId
+                  :(RCTResponseSenderBlock)callback) {
+    [[self.tracker subject] setUserId:userId];
+
+    callback(@[[NSNull null], @true]);
+}
+
 RCT_EXPORT_METHOD(trackStructuredEvent
                   :(nonnull NSString *)category // required (non-empty string)
                   :(nonnull NSString *)action // required
                   :(NSString *)label
                   :(NSString *)property
                   :(double)value
-                  :(NSArray<SPSelfDescribingJson *> *)contexts) {
+                  :(NSArray<SPSelfDescribingJson *> *)contexts
+                  :(RCTResponseSenderBlock)callback) {
     SPStructured * trackerEvent = [SPStructured build:^(id<SPStructuredBuilder> builder) {
         [builder setCategory:category];
         [builder setAction:action];
@@ -69,6 +81,8 @@ RCT_EXPORT_METHOD(trackStructuredEvent
         }
     }];
     [self.tracker trackStructuredEvent:trackerEvent];
+
+    callback(@[[NSNull null], @true]);
 }
 
 RCT_EXPORT_METHOD(trackScreenViewEvent
