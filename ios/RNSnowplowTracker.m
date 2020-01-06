@@ -54,8 +54,8 @@ RCT_EXPORT_METHOD(trackSelfDescribingEvent
     [self.tracker trackUnstructuredEvent:unstructEvent];
 }
 
-RCT_EXPORT_METHOD(setUserId
-                  :(nonnull NSString *)userId
+RCT_EXPORT_METHOD(setSubjectUserId
+                  :(NSString *)userId
                   :(RCTResponseSenderBlock)callback) {
     [[self.tracker subject] setUserId:userId];
 
@@ -93,7 +93,8 @@ RCT_EXPORT_METHOD(trackScreenViewEvent
                   :(NSString *)previousScreenType
                   :(NSString *)previousScreenId
                   :(NSString *)transitionType
-                  :(NSArray<SPSelfDescribingJson *> *)contexts) {
+                  :(NSArray<SPSelfDescribingJson *> *)contexts
+                  :(RCTResponseSenderBlock)callback) {
     SPScreenView * SVevent = [SPScreenView build:^(id<SPScreenViewBuilder> builder) {
         [builder setName:screenName];
         if (screenId != nil) [builder setScreenId:screenId]; else [builder setScreenId:[[NSUUID UUID] UUIDString]];
@@ -107,6 +108,40 @@ RCT_EXPORT_METHOD(trackScreenViewEvent
         }
       }];
       [self.tracker trackScreenViewEvent:SVevent];
+      callback(@[[NSNull null], @true]);
 }
 
+RCT_EXPORT_METHOD(trackEcommerceEvent
+                 :(nonnull NSString *)orderId
+                 :(nonnull NSString *)affiliation
+                 :(double)total
+                 :(double)tax
+                 :(double)shipping
+                 :(nonnull NSArray<NSDictionary *> *)items
+                 :(RCTResponseSenderBlock)callback) {
+
+   NSMutableArray *itemArray = [NSMutableArray array];
+
+   for (NSDictionary *item in items) {
+       NSNumber *price = [item valueForKey:@"price"];
+       NSNumber *quantity = [item valueForKey:@"quantity"];
+    
+       [itemArray addObject:[SPEcommerceItem build:^(id<SPEcommTransactionItemBuilder> builder) {
+         [builder setItemId: [item valueForKey:@"orderId"]];
+         [builder setSku: [item valueForKey:@"sku"]];
+         [builder setPrice: [price doubleValue]];
+         [builder setQuantity: [quantity integerValue]];
+       }]];
+   }
+
+   SPEcommerce *event = [SPEcommerce build:^(id<SPEcommTransactionBuilder> builder) {
+    [builder setOrderId:orderId];
+    [builder setTotalValue:total];
+    [builder setAffiliation:affiliation];
+    [builder setShipping:shipping];
+    [builder setItems:itemArray];
+   }];
+   [self.tracker trackEcommerceEvent:event];
+   callback(@[[NSNull null], @true]);
+}
 @end
