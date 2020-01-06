@@ -79,19 +79,13 @@ public class EventUtil {
     }
 
     public static EcommerceTransaction getEcommerceTransactionEvent(String orderId, Double totalValue,
-           String affiliation, Double taxValue, Double shipping, String city, String state, String country,
-           String currency, ReadableArray items, String eventId) {
+           String affiliation, Double taxValue, Double shipping, ReadableArray items) {
         EcommerceTransaction.Builder eventBuilder = EcommerceTransaction.builder()
             .affiliation(affiliation)
-            .city(city)
-            .country(country)
-            .currency(currency)
-            .eventId(eventId)
             .orderId(orderId)
             .totalValue(totalValue)
             .taxValue(taxValue)
-            .shipping(shipping)
-            .state(state);
+            .shipping(shipping);
         List<EcommerceTransactionItem> transactionItems = EventUtil.getEcommerceTransactionItemList(items);
         if (transactionItems != null) {
             eventBuilder.items(transactionItems);
@@ -112,10 +106,7 @@ public class EventUtil {
                 .itemId(json.getString("itemId"))
                 .sku(json.getString(("sku")))
                 .price(json.getDouble(("price")))
-                .quantity(json.getInt("quantity"))
-                .name(json.getString("name"))
-                .category(json.getString("category"))
-                .currency(json.getString("currency"));
+                .quantity(json.getInt("quantity"));
         return builder.build();
     }
 }
