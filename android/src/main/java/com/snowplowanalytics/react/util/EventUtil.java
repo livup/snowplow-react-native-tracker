@@ -80,7 +80,7 @@ public class EventUtil {
 
     public static EcommerceTransaction getEcommerceTransactionEvent(String orderId, Double totalValue,
            String affiliation, Double taxValue, Double shipping, String city, String state, String country,
-           String currency, ReadableArray items, String eventId, ReadableArray contexts) {
+           String currency, ReadableArray items, String eventId) {
         EcommerceTransaction.Builder eventBuilder = EcommerceTransaction.builder()
             .affiliation(affiliation)
             .city(city)
@@ -95,10 +95,6 @@ public class EventUtil {
         List<EcommerceTransactionItem> transactionItems = EventUtil.getEcommerceTransactionItemList(items);
         if (transactionItems != null) {
             eventBuilder.items(transactionItems);
-        }
-        List<SelfDescribingJson> nativeContexts = EventUtil.getContexts(contexts);
-        if (nativeContexts != null) {
-            eventBuilder.customContext(nativeContexts);
         }
         return eventBuilder.build();
     }

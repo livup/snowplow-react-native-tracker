@@ -182,11 +182,11 @@ public class RNSnowplowTrackerModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void trackEcommerceEvent(String orderId, String affiliation, Double total,
-                                    Double shipping, Double tax, ReadableArray items,
-                                    ReadableArray contexts, Callback callback) {
+                                    Double tax,Double shipping, ReadableArray items,
+                                    Callback callback) {
         EcommerceTransaction trackerEvent = EventUtil.getEcommerceTransactionEvent(orderId, total,
                 affiliation, tax, shipping, null, null, null,
-                null, items, null, contexts);
+                null, items, null);
         if (trackerEvent != null) {
             tracker.track(trackerEvent);
             callback.invoke(null, true);
