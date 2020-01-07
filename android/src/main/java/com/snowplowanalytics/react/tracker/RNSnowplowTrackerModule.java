@@ -59,7 +59,7 @@ public class RNSnowplowTrackerModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void initialize(String endpoint, String method, String protocol,
-                           String namespace, String appId, boolean enableGeoLocation,
+                           String namespace, String appId,
                            ReadableMap options, Callback callback) {
         this.emitter = new Emitter.EmitterBuilder(endpoint, this.reactContext)
                 .method(method.equalsIgnoreCase("post") ? HttpMethod.POST : HttpMethod.GET)
@@ -72,7 +72,10 @@ public class RNSnowplowTrackerModule extends ReactContextBaseJavaModule {
                 .base64(false)
                 .level(LogLevel.VERBOSE)
                 .mobileContext(true)
-                .geoLocationContext(enableGeoLocation)
+                .applicationContext(true)
+                .applicationCrash(true)
+                .screenContext(true)
+                .sessionContext(true)
                 .screenviewEvents(options.hasKey("autoScreenView") ? options.getBoolean("autoScreenView") : false)
                 .build()
         );
@@ -185,8 +188,7 @@ public class RNSnowplowTrackerModule extends ReactContextBaseJavaModule {
                                     Double tax,Double shipping, ReadableArray items,
                                     Callback callback) {
         EcommerceTransaction trackerEvent = EventUtil.getEcommerceTransactionEvent(orderId, total,
-                affiliation, tax, shipping, null, null, null,
-                null, items, null);
+                affiliation, tax, shipping, items);
         if (trackerEvent != null) {
             tracker.track(trackerEvent);
             callback.invoke(null, true);
