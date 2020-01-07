@@ -81,6 +81,8 @@ public class RNSnowplowTrackerModule extends ReactContextBaseJavaModule {
         );
         Subject subject = new Subject.SubjectBuilder().build();
         this.tracker.setSubject(subject);
+        Log.d("Tracker", "Initialized");
+        Log.d("Tracker", this.tracker);
         callback.invoke(null, true);
     }
 
