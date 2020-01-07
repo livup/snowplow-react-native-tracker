@@ -72,17 +72,12 @@ public class RNSnowplowTrackerModule extends ReactContextBaseJavaModule {
                 .base64(false)
                 .level(LogLevel.VERBOSE)
                 .mobileContext(true)
-                .applicationContext(true)
-                .applicationCrash(true)
-                .screenContext(true)
-                .sessionContext(true)
                 .screenviewEvents(options.hasKey("autoScreenView") ? options.getBoolean("autoScreenView") : false)
                 .build()
         );
         Subject subject = new Subject.SubjectBuilder().build();
         this.tracker.setSubject(subject);
         Log.d("Tracker", "Initialized");
-        Log.d("Tracker", this.tracker);
         callback.invoke(null, true);
     }
 
