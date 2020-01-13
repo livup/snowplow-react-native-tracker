@@ -44,7 +44,8 @@ RCT_EXPORT_METHOD(initialize
 
 RCT_EXPORT_METHOD(trackSelfDescribingEvent
                   :(nonnull SPSelfDescribingJson *)event
-                  :(NSArray<SPSelfDescribingJson *> *)contexts) {
+                  :(NSArray<SPSelfDescribingJson *> *)contexts
+                  :(RCTResponseSenderBlock)callback) {
     SPUnstructured * unstructEvent = [SPUnstructured build:^(id<SPUnstructuredBuilder> builder) {
         [builder setEventData:event];
         if (contexts) {
@@ -52,6 +53,7 @@ RCT_EXPORT_METHOD(trackSelfDescribingEvent
         }
     }];
     [self.tracker trackUnstructuredEvent:unstructEvent];
+    callback(@[[NSNull null], @true]);
 }
 
 RCT_EXPORT_METHOD(setSubjectUserId
