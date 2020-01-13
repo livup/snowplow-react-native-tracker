@@ -97,7 +97,7 @@ RCT_EXPORT_METHOD(setSubjectIpAddress
 RCT_EXPORT_METHOD(setSubjectUseragent
                   :(NSString *)userAgent
                   :(RCTResponseSenderBlock)callback) {
-    [[self.tracker subject] setUseragent:useragent];
+    [[self.tracker subject] setUseragent:userAgent];
 
     callback(@[[NSNull null], @true]);
 }
