@@ -62,6 +62,55 @@ RCT_EXPORT_METHOD(setSubjectUserId
     callback(@[[NSNull null], @true]);
 }
 
+RCT_EXPORT_METHOD(setSubjectColorDepth
+                  :(NSInteger *)colorDepth
+                  :(RCTResponseSenderBlock)callback) {
+    [[self.tracker subject] setColorDepth:colorDepth];
+
+    callback(@[[NSNull null], @true]);
+}
+
+RCT_EXPORT_METHOD(setSubjectTimezone
+                  :(NSString *)timezone
+                  :(RCTResponseSenderBlock)callback) {
+    [[self.tracker subject] setTimezone:timezone];
+
+    callback(@[[NSNull null], @true]);
+}
+
+RCT_EXPORT_METHOD(setSubjectLanguage
+                  :(NSString *)language
+                  :(RCTResponseSenderBlock)callback) {
+    [[self.tracker subject] setLanguage:language];
+
+    callback(@[[NSNull null], @true]);
+}
+
+RCT_EXPORT_METHOD(setSubjectIpAddress
+                  :(NSString *)ipAddress
+                  :(RCTResponseSenderBlock)callback) {
+    [[self.tracker subject] setIpAddress:ipAddress];
+
+    callback(@[[NSNull null], @true]);
+}
+
+RCT_EXPORT_METHOD(setSubjectUseragent
+                  :(NSString *)userAgent
+                  :(RCTResponseSenderBlock)callback) {
+    [[self.tracker subject] setUseragent:useragent];
+
+    callback(@[[NSNull null], @true]);
+}
+
+RCT_EXPORT_METHOD(setSubjectNetworkUserId
+                  :(NSString *)networkUserId
+                  :(RCTResponseSenderBlock)callback) {
+    [[self.tracker subject] setNetworkUserId:networkUserId];
+
+    callback(@[[NSNull null], @true]);
+}
+
+
 RCT_EXPORT_METHOD(trackStructuredEvent
                   :(nonnull NSString *)category // required (non-empty string)
                   :(nonnull NSString *)action // required
