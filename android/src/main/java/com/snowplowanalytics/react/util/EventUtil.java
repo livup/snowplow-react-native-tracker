@@ -104,9 +104,10 @@ public class EventUtil {
     private static EcommerceTransactionItem getEcommerceTransactionItem(ReadableMap json) {
         EcommerceTransactionItem.Builder builder = EcommerceTransactionItem.builder()
                 .itemId(json.getString("itemId"))
-                .sku(json.getString(("sku")))
-                .price(json.getDouble(("price")))
-                .quantity(json.getInt("quantity"));
+                .sku(json.getString("sku"))
+                .price(json.getDouble("price"))
+                .quantity(json.getInt("quantity"))
+                .currency(json.getString("currency"));
         return builder.build();
     }
 }
