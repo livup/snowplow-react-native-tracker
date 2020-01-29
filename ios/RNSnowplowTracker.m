@@ -38,6 +38,7 @@ RCT_EXPORT_METHOD(initialize
         [builder setSessionContext:YES];
         [builder setAutotrackScreenViews:options[@"autoScreenView"]];
         [builder setSubject:subject];
+        [builder setApplicationContext:YES];
     }];
 
     callback(@[[NSNull null], @true]);
