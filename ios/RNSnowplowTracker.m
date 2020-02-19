@@ -39,6 +39,8 @@ RCT_EXPORT_METHOD(initialize
         [builder setAutotrackScreenViews:options[@"autoScreenView"]];
         [builder setSubject:subject];
         [builder setApplicationContext:YES];
+        [builder setForegroundTimeout:1800];
+        [builder setBackgroundTimeout:1800];
     }];
 
     callback(@[[NSNull null], @true]);
