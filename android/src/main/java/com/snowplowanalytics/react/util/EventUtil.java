@@ -16,8 +16,8 @@ public class EventUtil {
     private static List<SelfDescribingJson> getContexts(ReadableArray contexts) {
         List<SelfDescribingJson> nativeContexts = new ArrayList<>();
         for (int i = 0; i < contexts.size(); i++) {
-          SelfDescribingJson json = EventUtil.getSelfDescribingJson(contexts.getMap(i));
-          nativeContexts.add(json);
+            SelfDescribingJson json = EventUtil.getSelfDescribingJson(contexts.getMap(i));
+            nativeContexts.add(json);
         }
         return nativeContexts;
     }
@@ -46,7 +46,7 @@ public class EventUtil {
     }
 
     public static Structured getStructuredEvent(String category, String action, String label,
-            String property, Number value, ReadableArray contexts) {
+                                                String property, Number value, ReadableArray contexts) {
         Structured.Builder eventBuilder = Structured.builder()
                 .action(action)
                 .category(category)
@@ -61,8 +61,8 @@ public class EventUtil {
     }
 
     public static ScreenView getScreenViewEvent(String screenName, String screenId, String screenType,
-            String previousScreenName, String previousScreenType, String previousScreenId,
-            String transitionType, ReadableArray contexts) {
+                                                String previousScreenName, String previousScreenType, String previousScreenId,
+                                                String transitionType, ReadableArray contexts) {
         ScreenView.Builder eventBuilder = ScreenView.builder()
                 .name(screenName)
                 .id(screenId)
@@ -79,16 +79,20 @@ public class EventUtil {
     }
 
     public static EcommerceTransaction getEcommerceTransactionEvent(String orderId, Double totalValue,
-           String affiliation, Double taxValue, Double shipping, ReadableArray items) {
+                                                                    String affiliation, Double taxValue, Double shipping, ReadableArray items, ReadableArray contexts) {
         EcommerceTransaction.Builder eventBuilder = EcommerceTransaction.builder()
-            .affiliation(affiliation)
-            .orderId(orderId)
-            .totalValue(totalValue)
-            .taxValue(taxValue)
-            .shipping(shipping);
+                .affiliation(affiliation)
+                .orderId(orderId)
+                .totalValue(totalValue)
+                .taxValue(taxValue)
+                .shipping(shipping);
         List<EcommerceTransactionItem> transactionItems = EventUtil.getEcommerceTransactionItemList(items);
         if (transactionItems != null) {
             eventBuilder.items(transactionItems);
+        }
+        List<SelfDescribingJson> nativeContexts = EventUtil.getContexts(contexts);
+        if (nativeContexts != null) {
+            eventBuilder.customContext(nativeContexts);
         }
         return eventBuilder.build();
     }
