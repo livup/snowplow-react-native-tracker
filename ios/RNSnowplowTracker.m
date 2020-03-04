@@ -22,7 +22,6 @@ RCT_EXPORT_METHOD(initialize
                   :(nonnull NSString *)appId
                   :(NSDictionary *)options
                   :(RCTResponseSenderBlock)callback
-                  //:(BOOL *)autoScreenView
                 ) {
     SPSubject *subject = [[SPSubject alloc] initWithPlatformContext:YES andGeoContext:NO];
 
@@ -31,16 +30,17 @@ RCT_EXPORT_METHOD(initialize
         [builder setHttpMethod:([@"post" caseInsensitiveCompare:method] == NSOrderedSame) ? SPRequestPost : SPRequestGet];
         [builder setProtocol:([@"https" caseInsensitiveCompare:protocol] == NSOrderedSame) ? SPHttps : SPHttp];
     }];
+    
     self.tracker = [SPTracker build:^(id<SPTrackerBuilder> builder) {
         [builder setEmitter:emitter];
         [builder setAppId:appId];
         [builder setTrackerNamespace:namespace];
-        [builder setSessionContext:YES];
         [builder setAutotrackScreenViews:options[@"autoScreenView"]];
+        [builder setSessionContext:options[@"setSessionContext"]];
+        [builder setApplicationContext:options[@"setApplicationContext"]];
+        [builder setForegroundTimeout:options[@"foregroundTimeout"]];
+        [builder setBackgroundTimeout:options[@"backgroundTimeout"]];
         [builder setSubject:subject];
-        [builder setApplicationContext:YES];
-        [builder setForegroundTimeout:1800];
-        [builder setBackgroundTimeout:1800];
     }];
 
     callback(@[[NSNull null], @true]);
@@ -173,6 +173,7 @@ RCT_EXPORT_METHOD(trackEcommerceEvent
                  :(double)tax
                  :(double)shipping
                  :(nonnull NSArray<NSDictionary *> *)items
+                 :(NSArray<SPSelfDescribingJson *> *)contexts
                  :(RCTResponseSenderBlock)callback) {
 
    NSMutableArray *itemArray = [NSMutableArray array];
@@ -188,6 +189,7 @@ RCT_EXPORT_METHOD(trackEcommerceEvent
          [builder setQuantity: [quantity integerValue]];
        }]];
    }
+   
 
    SPEcommerce *event = [SPEcommerce build:^(id<SPEcommTransactionBuilder> builder) {
     [builder setOrderId:orderId];
@@ -195,6 +197,9 @@ RCT_EXPORT_METHOD(trackEcommerceEvent
     [builder setAffiliation:affiliation];
     [builder setShipping:shipping];
     [builder setItems:itemArray];
+    if (contexts) {
+      [builder setContexts:[[NSMutableArray alloc] initWithArray:contexts]];
+    }
    }];
    [self.tracker trackEcommerceEvent:event];
    callback(@[[NSNull null], @true]);

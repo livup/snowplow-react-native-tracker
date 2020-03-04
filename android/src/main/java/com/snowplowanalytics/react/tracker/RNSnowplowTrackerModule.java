@@ -59,8 +59,8 @@ public class RNSnowplowTrackerModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void initialize(String endpoint, String method, String protocol,
-                           String namespace, String appId,
-                           ReadableMap options, Callback callback) {
+                           String namespace, String appId, ReadableMap options,
+                           Callback callback) {
         this.emitter = new Emitter.EmitterBuilder(endpoint, this.reactContext)
                 .method(method.equalsIgnoreCase("post") ? HttpMethod.POST : HttpMethod.GET)
                 .security(protocol.equalsIgnoreCase("https") ? RequestSecurity.HTTPS : RequestSecurity.HTTP)
@@ -72,11 +72,11 @@ public class RNSnowplowTrackerModule extends ReactContextBaseJavaModule {
                 .base64(false)
                 .level(LogLevel.VERBOSE)
                 .mobileContext(true)
-                .sessionContext(true)
-                .applicationContext(true)
-                .foregroundTimeout(1800)
-                .backgroundTimeout(1800)
-                .screenviewEvents(options.hasKey("autoScreenView") ? options.getBoolean("autoScreenView") : false)
+                .foregroundTimeout(options.hasKey("foregroundTimeout") ? options.getInt("foregroundTimeout") : 600)
+                .foregroundTimeout(options.hasKey("backgroundTimeout") ? options.getInt("backgroundTimeout") : 300)
+                .sessionContext(options.hasKey("setSessionContext") && options.getBoolean("setSessionContext"))
+                .applicationContext(options.hasKey("setApplicationContext") && options.getBoolean("setApplicationContext"))
+                .screenviewEvents(options.hasKey("autoScreenView") && options.getBoolean("autoScreenView"))
                 .build()
         );
         Subject subject = new Subject.SubjectBuilder().build();
@@ -173,7 +173,7 @@ public class RNSnowplowTrackerModule extends ReactContextBaseJavaModule {
                                      String previousScreenId, String transitionType,
                                      ReadableArray contexts, Callback callback) {
         if (screenId == null) {
-          screenId = UUID.randomUUID().toString();
+            screenId = UUID.randomUUID().toString();
         }
         ScreenView trackerEvent = EventUtil.getScreenViewEvent(screenName,
                 screenId, screenType, previousScreenName, previousScreenId, previousScreenType,
@@ -187,9 +187,9 @@ public class RNSnowplowTrackerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void trackEcommerceEvent(String orderId, String affiliation, Double total,
                                     Double tax,Double shipping, ReadableArray items,
-                                    Callback callback) {
+                                    ReadableArray contexts, Callback callback) {
         EcommerceTransaction trackerEvent = EventUtil.getEcommerceTransactionEvent(orderId, total,
-                affiliation, tax, shipping, items);
+                affiliation, tax, shipping, items, contexts);
         if (trackerEvent != null) {
             tracker.track(trackerEvent);
             callback.invoke(null, true);
