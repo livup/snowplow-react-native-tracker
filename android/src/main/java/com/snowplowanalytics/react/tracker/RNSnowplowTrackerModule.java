@@ -76,7 +76,6 @@ public class RNSnowplowTrackerModule extends ReactContextBaseJavaModule {
                 .foregroundTimeout(options.hasKey("backgroundTimeout") ? options.getInt("backgroundTimeout") : 300)
                 .sessionContext(options.hasKey("setSessionContext") && options.getBoolean("setSessionContext"))
                 .applicationContext(options.hasKey("setApplicationContext") && options.getBoolean("setApplicationContext"))
-                .screenviewEvents(options.hasKey("autoScreenView") && options.getBoolean("autoScreenView"))
                 .build()
         );
         Subject subject = new Subject.SubjectBuilder().build();
