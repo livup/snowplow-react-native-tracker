@@ -35,7 +35,6 @@ RCT_EXPORT_METHOD(initialize
         [builder setEmitter:emitter];
         [builder setAppId:appId];
         [builder setTrackerNamespace:namespace];
-        [builder setAutotrackScreenViews:options[@"autoScreenView"]];
         [builder setSessionContext:options[@"setSessionContext"]];
         [builder setApplicationContext:options[@"setApplicationContext"]];
         [builder setForegroundTimeout:options[@"foregroundTimeout"]];
