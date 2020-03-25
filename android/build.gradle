@@ -45,6 +45,6 @@ dependencies {
     // Required Dependency for the Tracker
     implementation 'com.squareup.okhttp3:okhttp:3.12.1'
     implementation 'com.facebook.react:react-native:+'
-    implementation 'com.snowplowanalytics:snowplow-android-tracker:1.1.0'
+    implementation 'com.snowplowanalytics:snowplow-android-tracker:1.3.0@aar'
 }
   
