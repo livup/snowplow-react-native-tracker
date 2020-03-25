@@ -1,4 +1,5 @@
 #import "RNSnowplowTracker.h"
+#import <React/RCTConvert.h>
 #import <SnowplowTracker/SPTracker.h>
 #import <SnowplowTracker/SPEmitter.h>
 #import <SnowplowTracker/SPEvent.h>
@@ -35,10 +36,18 @@ RCT_EXPORT_METHOD(initialize
         [builder setEmitter:emitter];
         [builder setAppId:appId];
         [builder setTrackerNamespace:namespace];
-        [builder setSessionContext:options[@"setSessionContext"]];
-        [builder setApplicationContext:options[@"setApplicationContext"]];
-        [builder setForegroundTimeout:options[@"foregroundTimeout"]];
-        [builder setBackgroundTimeout:options[@"backgroundTimeout"]];
+        if (options[@"setSessionContext"] != nil) {
+            [builder setSessionContext:options[@"setSessionContext"]];
+        }
+        if (options[@"setApplicationContext"] != nil) {
+            [builder setApplicationContext:options[@"setApplicationContext"]];
+        }
+        if (options[@"foregroundTimeout"] != nil) {
+            [builder setForegroundTimeout:[RCTConvert NSInteger: options[@"foregroundTimeout"]]];
+        }
+        if (options[@"backgroundTimeout"] != nil) {
+            [builder setBackgroundTimeout:[RCTConvert NSInteger: options[@"backgroundTimeout"]]];
+        }
         [builder setSubject:subject];
     }];
 
@@ -70,7 +79,7 @@ RCT_EXPORT_METHOD(setSubjectUserId
 RCT_EXPORT_METHOD(setSubjectColorDepth
                   :(NSInteger *)colorDepth
                   :(RCTResponseSenderBlock)callback) {
-    [[self.tracker subject] setColorDepth:colorDepth];
+    [[self.tracker subject] setColorDepth:*colorDepth];
 
     callback(@[[NSNull null], @true]);
 }
